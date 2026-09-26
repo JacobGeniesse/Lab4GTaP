@@ -3,22 +3,26 @@ using Unity.Cinemachine;
 using System;
 public class CamManager : MonoBehaviour
 {
-    public CinemachineCamera cineCam;
-    [SerializeField] private CinemachineFollow cineFollow;
-    [SerializeField] private CinemachineBasicMultiChannelPerlin cineShake;
+    [Header("Camera References")]
+    public CinemachineCamera cineCam; //Reference to the cinemachine camera component
+    [SerializeField] private CinemachineFollow cineFollow; //Reference to the cinemachine follow component
+    [SerializeField] private CinemachineBasicMultiChannelPerlin cineShake; //Reference to the perlin component
 
-    [SerializeField] private Vector3 standardZoom;
-    [SerializeField] private Vector3 bigZoom;
-    [SerializeField] private float zoomSpeed = 0.5f;
+    [Header("Camera Zoom Variables")]
+    [SerializeField] private Vector3 standardZoom; //Cam offset for standard zoom
+    [SerializeField] private Vector3 bigZoom; // Cam offset for when a big meteor is active
+    [SerializeField] private float zoomSpeed = 0.5f; //Speed of transistion between zooms
 
+    [Header("Camera Shake Variables")]
+    [SerializeField] private float shakeLength; //How long should the camera shake for?
+    private float currentShakeLength; //Current time left on the shake
+
+    //Helper classes
     private SpawnManager spawnManager;
-    private bool activeShake;
-    [SerializeField] private float shakeLength;
-    private float currentShakeLength;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //Try catch for assigning spawnManager
         try
         {
             spawnManager = GetComponent<SpawnManager>();
@@ -28,18 +32,20 @@ public class CamManager : MonoBehaviour
             throw new ArgumentException("Unable to find SpawnManager component!", nameof(CamManager));
         }
 
+        //Error check for cinemachine follow component
         if(cineFollow == null)
         {
             Debug.LogError("Cinemachine follow var not assigned!");
         }
 
+        //Error check for perlin component
         if(cineShake == null)
         {
             Debug.LogError("Cinemachine Basic Multi Channel Perlin var not assigned!");
         }
         else
         {
-            cineShake.AmplitudeGain = 0;
+            cineShake.AmplitudeGain = 0; //If the shake var exists set it to zero
         }
     }
 
@@ -47,21 +53,22 @@ public class CamManager : MonoBehaviour
     {
         if(currentShakeLength > 0)
         {
+            //Decrease currentShakeLength if above zero
             currentShakeLength -= Time.deltaTime;
         }
         else
         {
-            if(activeShake == true)
+            //Stop shaking the camera if at or below zero
+            if(cineShake.AmplitudeGain != 0)
             {
                 cineShake.AmplitudeGain = 0;
-                activeShake = false;
             }
         }
     }
 
-    // Update is called once per frame
     void LateUpdate()
     {
+        //If there's a big meteor active zoom out, if not zoom in
         if(spawnManager.bigMeteors.Count > 0)
         {
             ZoomOut();
@@ -72,30 +79,30 @@ public class CamManager : MonoBehaviour
         }
     }
 
+    //Helper func for zooming the camera in
     public void ZoomIn()
     {
+        //If not already at desired value move towards it
         if(cineFollow.FollowOffset != standardZoom)
         {
             cineFollow.FollowOffset = Vector3.MoveTowards(cineFollow.FollowOffset, standardZoom, zoomSpeed * Time.deltaTime);
         }
     }
 
+    //Helper func for zooming the camera out
     public void ZoomOut()
     {
-        if(cineFollow.FollowOffset != bigZoom)
+        //If not already at desired value move towards it
+        if (cineFollow.FollowOffset != bigZoom)
         {
             cineFollow.FollowOffset = Vector3.MoveTowards(cineFollow.FollowOffset, bigZoom, zoomSpeed * Time.deltaTime);
         }
     }
 
+    //Helper func for starting to shake the camera
     public void ShakeCam()
     {
-        if(activeShake == false)
-        {
-            currentShakeLength = shakeLength;
-            activeShake = true;
-        }
-
+        currentShakeLength = shakeLength;
         cineShake.AmplitudeGain = 1;
     }
 }

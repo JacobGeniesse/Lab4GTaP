@@ -5,12 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class StateManager : MonoBehaviour
 {
-    [HideInInspector] public bool gameOver;
+    [HideInInspector] public bool gameOver; //Is the game currently over?
 
-    [SerializeField] private InputActionAsset inputList;
-    private InputAction reset;
+    [SerializeField] private InputActionAsset inputList; //Input list ref
+    private InputAction reset; //action ref for resetting the game
 
-    [SerializeField] private string sceneName;
+    [SerializeField] private string sceneName; //name of the scene to reload
 
     void OnEnable()
     {
@@ -23,19 +23,19 @@ public class StateManager : MonoBehaviour
             throw new ArgumentException("Unable to find inputList!", nameof(StateManager));
         }
 
-        reset.performed += Reset;
+        reset.performed += ResetLevel; //Add reset to the actions called by the reset delegate
     }
 
     private void OnDisable()
     {
-        reset.performed -= Reset;
+        reset.performed -= ResetLevel; //Remove reset from the actions called by the reset delegate
     }
 
-    private void Reset(InputAction.CallbackContext context)
+    private void ResetLevel(InputAction.CallbackContext context)
     {
         if(gameOver == true)
         {
-            SceneManager.LoadScene(sceneName);
+            SceneManager.LoadScene(sceneName); //If in a game over reload the scene
         }
     }
 }
