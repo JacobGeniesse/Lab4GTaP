@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4664235326224736431}
   - component: {fileID: 4095847460123581488}
   - component: {fileID: 7457709209502035483}
-  - component: {fileID: 7276487544754942962}
   - component: {fileID: 3171259480124662398}
   - component: {fileID: 6993456702545468737}
   - component: {fileID: 7498871894839547182}
@@ -171,39 +170,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7276487544754942962
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7158442464957206486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bea7e8b42bcba4d47899be994607d533, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
-  inputList: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  move:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 73c37240-de52-4345-b6e4-ce17e62b673b
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-    m_Priority: 0
-  shoot:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 6bd62430-966c-4c33-b70f-9a473bb7e5e2
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-    m_Priority: 0
 --- !u!114 &3171259480124662398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c569279a10537a449df93b238bb35b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  inputList: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!114 &6993456702545468737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,6 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShoot
   laserPrefab: {fileID: 5506627125660967038, guid: 1a8162fa00c811a43904a4f611676905, type: 3}
   shootOffset: {x: 0, y: 1, z: 0}
+  inputList: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   cooldownLength: 0.75
 --- !u!114 &7498871894839547182
 MonoBehaviour:

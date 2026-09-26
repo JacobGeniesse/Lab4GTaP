@@ -1,6 +1,8 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using System;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -9,24 +11,34 @@ public class PlayerShoot : MonoBehaviour
 
     [SerializeField] private Vector3 shootOffset; //Vector3 for the shootOffset, refactored to use a variable instead of a raw number so that it is no longer hard-coded
 
+    [SerializeField] private InputActionAsset inputList;
     [SerializeField] private float cooldownLength; //Var for the shot cooldown length, refactored to not be hard-coded
 
-    private PlayerInput playerInput; //Script reference for the player's input script
+    private InputAction shoot;
 
-    void Start()
+    void OnEnable()
     {
-        playerInput = FindAnyObjectByType<PlayerInput>(); //Assigning the input script
+        try
+        {
+            shoot = inputList["Shoot"];
+        }
+        catch
+        {
+            throw new ArgumentException("Unable to find inputList!", nameof(PlayerShoot));
+        }
+
+        shoot.performed += Shooting;
     }
 
-    void Update()
+    private void OnDisable()
     {
-        Shooting(); //Run the shooting func
+        shoot.performed -= Shooting;
     }
 
-    void Shooting()
+    void Shooting(InputAction.CallbackContext context)
     {
         //if the player presses the shoot button and they can shoot run the shooting func
-        if (playerInput.shoot.WasPressedThisFrame() && canShoot)
+        if (canShoot)
         {
             Instantiate(laserPrefab, transform.position + shootOffset, Quaternion.identity); //Instantiate a laser prefab
             canShoot = false; //Player can no longer shoot

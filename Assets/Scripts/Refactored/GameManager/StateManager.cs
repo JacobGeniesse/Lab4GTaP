@@ -1,29 +1,39 @@
 using UnityEngine;
+using System;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class StateManager : MonoBehaviour
 {
     [HideInInspector] public bool gameOver;
 
-    private PlayerInput playerInput;
+    [SerializeField] private InputActionAsset inputList;
+    private InputAction reset;
 
     [SerializeField] private string sceneName;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void OnEnable()
     {
-        playerInput = GameObject.FindAnyObjectByType<PlayerInput>();
+        try
+        {
+            reset = inputList["Reset"];
+        }
+        catch
+        {
+            throw new ArgumentException("Unable to find inputList!", nameof(StateManager));
+        }
+
+        reset.performed += Reset;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        Reset();
+        reset.performed -= Reset;
     }
 
-    private void Reset()
+    private void Reset(InputAction.CallbackContext context)
     {
-        if(playerInput.reset.WasPressedThisFrame() && gameOver == true)
+        if(gameOver == true)
         {
             SceneManager.LoadScene(sceneName);
         }

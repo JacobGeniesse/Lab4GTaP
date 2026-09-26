@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
@@ -8,23 +9,51 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalScreenLimit = 10f;
     private float verticalScreenLimit = 6f;
 
-    private PlayerInput playerInput;
+    private bool startMoving = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private InputActionAsset inputList;
+    private InputAction move;
+
+
+    private void OnEnable()
     {
-        playerInput = FindAnyObjectByType<PlayerInput>();
+        try
+        { 
+            move = inputList["Move"];
+        }
+        catch
+        {
+            throw new ArgumentException("Unable to find inputList", nameof(PlayerMovement));  
+        }
+
+        if (move != null)
+        {
+            move.started += StartMove;
+            move.canceled += EndMove;
+        }
     }
 
-    // Update is called once per frame
+    private void OnDisable()
+    {
+        if(move != null)
+        {
+            move.started -= StartMove;
+            move.canceled -= EndMove;
+        }
+    }
+
     void Update()
     {
-        Movement();
+        //While a movement key is pressed update the movement function
+        if(startMoving == true)
+        {
+            Movement();
+        }
     }
 
     void Movement()
     {
-        Vector3 moveInput = playerInput.move.ReadValue<Vector2>();
+        Vector3 moveInput = move.ReadValue<Vector2>();
         transform.Translate(new Vector3(moveInput.x, moveInput.y, 0) * Time.deltaTime * speed);
         if (transform.position.x > horizontalScreenLimit || transform.position.x <= -horizontalScreenLimit)
         {
@@ -36,4 +65,13 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void StartMove(InputAction.CallbackContext context)
+    {
+        startMoving = true;
+    }
+
+    void EndMove(InputAction.CallbackContext context)
+    {
+        startMoving = false;
+    }
 }
