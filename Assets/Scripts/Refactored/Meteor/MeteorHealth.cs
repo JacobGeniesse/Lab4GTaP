@@ -7,7 +7,7 @@ public class MeteorHealth : Health
     private float currentHealth;
     [SerializeField] private float maxHealth = 0;
 
-    [SerializeField] private bool incrementCount = false;
+    [SerializeField] private bool bigMeteor = false;
 
     private SpawnManager spawnManager;
 
@@ -30,11 +30,16 @@ public class MeteorHealth : Health
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
-            if (incrementCount)
+            if (!bigMeteor)
             {
-                Destroy(this.gameObject);
+                spawnManager.IncremenetMeteor();
             }
-            spawnManager.IncremenetMeteor();
+            else
+            {
+                spawnManager.bigMeteors.Remove(this.gameObject);
+            }
+            Destroy(this.gameObject);
+
         }
     }
 }

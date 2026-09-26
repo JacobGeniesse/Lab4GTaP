@@ -186,6 +186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MeteorHealth
   maxHealth: 5
+  bigMeteor: 1
 --- !u!114 &7986507455777136222
 MonoBehaviour:
   m_ObjectHideFlags: 0
