@@ -10,9 +10,11 @@ public class MeteorHealth : Health
     [SerializeField] private bool bigMeteor = false;
 
     private SpawnManager spawnManager;
+    private CamManager camManager;
 
     private void Start()
     {
+        camManager = FindAnyObjectByType<CamManager>();
         spawnManager = FindAnyObjectByType<SpawnManager>();
         currentHealth = maxHealth;
     }
@@ -37,6 +39,7 @@ public class MeteorHealth : Health
             else
             {
                 spawnManager.bigMeteors.Remove(this.gameObject);
+                camManager.ShakeCam();
             }
             Destroy(this.gameObject);
 
