@@ -13,4 +13,16 @@ MonoBehaviour:
   m_Name: NoiseProfile
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.NoiseSettings
   PositionNoise: []
-  OrientationNoise: []
+  OrientationNoise:
+  - X:
+      Frequency: 5
+      Amplitude: 2
+      Constant: 0
+    Y:
+      Frequency: 4
+      Amplitude: 2
+      Constant: 0
+    Z:
+      Frequency: 3
+      Amplitude: 2
+      Constant: 0
